@@ -1,0 +1,17 @@
+{
+  "name": "x-browser",
+  "description": "X/Twitter browser automation skill",
+  "version": "1.0.0",
+  "author": { "name": "gitkado" },
+  "skills": "./skills/",
+  "dependencies": {
+    "required": [
+      {
+        "name": "agent-browser",
+        "type": "cli",
+        "description": "Browser automation tool for Claude Code",
+        "installUrl": "https://github.com/anthropics/agent-browser"
+      }
+    ]
+  }
+}

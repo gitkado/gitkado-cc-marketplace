@@ -1,0 +1,23 @@
+{
+  "name": "gitkado-cc-marketplace",
+  "owner": { "name": "gitkado" },
+  "metadata": {
+    "description": "Claude Code plugins: skills and LSP servers"
+  },
+  "plugins": [
+    {
+      "name": "x-browser",
+      "source": "./x-browser",
+      "description": "X/Twitter browser automation skill",
+      "version": "1.0.0",
+      "dependencies": ["agent-browser (CLI)"]
+    },
+    {
+      "name": "ruby-lsp",
+      "source": "./ruby-lsp",
+      "description": "Ruby language server for Claude Code",
+      "version": "1.0.0",
+      "dependencies": ["ruby (>= 3.0)", "ruby-lsp (gem)"]
+    }
+  ]
+}
