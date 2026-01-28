@@ -18,6 +18,13 @@
       "description": "Ruby language server for Claude Code",
       "version": "1.0.0",
       "dependencies": ["ruby (>= 3.0)", "ruby-lsp (gem)"]
+    },
+    {
+      "name": "second-opinion",
+      "source": "./second-opinion",
+      "description": "Get second opinions from codex (OpenAI CLI) for code review and design consultation",
+      "version": "1.0.0",
+      "dependencies": ["codex (CLI)", "tmux", "jq"]
     }
   ]
 }

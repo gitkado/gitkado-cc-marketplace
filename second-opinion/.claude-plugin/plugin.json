@@ -1,0 +1,32 @@
+{
+  "name": "second-opinion",
+  "description": "Get second opinions from codex (OpenAI CLI) for code review and design consultation",
+  "version": "1.0.0",
+  "author": { "name": "gitkado" },
+  "skills": "./skills/",
+  "dependencies": {
+    "required": [
+      {
+        "name": "codex",
+        "type": "cli",
+        "description": "OpenAI CLI for code assistance",
+        "install": "npm install -g @openai/codex",
+        "installUrl": "https://github.com/openai/codex"
+      },
+      {
+        "name": "tmux",
+        "type": "cli",
+        "description": "Terminal multiplexer for session management",
+        "install": "brew install tmux",
+        "installUrl": "https://github.com/tmux/tmux"
+      },
+      {
+        "name": "jq",
+        "type": "cli",
+        "description": "JSON processor for parsing codex output",
+        "install": "brew install jq",
+        "installUrl": "https://jqlang.github.io/jq/"
+      }
+    ]
+  }
+}

@@ -37,6 +37,21 @@ Ruby言語のLSPサポートを提供します。
 /plugin enable ruby-lsp@gitkado-cc-marketplace
 ```
 
+### second-opinion
+
+Get second opinions from codex (OpenAI CLI) for code review and design consultation
+
+codex（OpenAI CLI）を使用して、コードレビューや設計相談のセカンドオピニオンを取得するスキルです。
+
+**依存関係:**
+- [codex](https://github.com/openai/codex) - OpenAI CLI (`npm install -g @openai/codex`)
+- [tmux](https://github.com/tmux/tmux) - ターミナルマルチプレクサ (`brew install tmux`)
+- [jq](https://jqlang.github.io/jq/) - JSONプロセッサ (`brew install jq`)
+
+```bash
+/plugin enable second-opinion@gitkado-cc-marketplace
+```
+
 ## プラグインの種類
 
 Claude Codeでは以下のようなプラグインを利用できます：
