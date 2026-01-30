@@ -9,22 +9,19 @@
       "name": "x-browser",
       "source": "./x-browser",
       "description": "X/Twitter browser automation skill",
-      "version": "1.0.0",
-      "dependencies": ["agent-browser (CLI)"]
+      "version": "1.0.0"
     },
     {
       "name": "ruby-lsp",
       "source": "./ruby-lsp",
       "description": "Ruby language server for Claude Code",
-      "version": "1.0.0",
-      "dependencies": ["ruby (>= 3.0)", "ruby-lsp (gem)"]
+      "version": "1.0.0"
     },
     {
       "name": "second-opinion",
       "source": "./second-opinion",
       "description": "Get second opinions from codex (OpenAI CLI) for code review and design consultation",
-      "version": "1.0.0",
-      "dependencies": ["codex (CLI)", "tmux", "jq"]
+      "version": "1.0.0"
     }
   ]
 }
