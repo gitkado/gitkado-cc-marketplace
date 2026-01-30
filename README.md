@@ -4,6 +4,14 @@
 
 ## マーケットプレイスの追加
 
+githubのリポジトリを直接指定
+
+```bash
+/plugin marketplace add gitkado/gitkado-cc-marketplace
+```
+
+手元でpluginを微調整したい場合は、localにcloneしてパス指定する
+
 ```bash
 /plugin marketplace add /path/to/gitkado-cc-marketplace
 ```
@@ -20,7 +28,7 @@ X/Twitter（twitter.com, x.com）のURLを自動検出してブラウザで開�
 - [agent-browser](https://github.com/anthropics/agent-browser) - ブラウザ自動化ツール
 
 ```bash
-/plugin enable x-browser@gitkado-cc-marketplace
+/plugin install x-browser@gitkado-cc-marketplace
 ```
 
 ### ruby-lsp
@@ -34,7 +42,7 @@ Ruby言語のLSPサポートを提供します。
 - [ruby-lsp](https://github.com/Shopify/ruby-lsp) gem (`gem install ruby-lsp`)
 
 ```bash
-/plugin enable ruby-lsp@gitkado-cc-marketplace
+/plugin install ruby-lsp@gitkado-cc-marketplace
 ```
 
 ### second-opinion
@@ -49,7 +57,7 @@ codex（OpenAI CLI）を使用して、コードレビューや設計相談の�
 - [jq](https://jqlang.github.io/jq/) - JSONプロセッサ (`brew install jq`)
 
 ```bash
-/plugin enable second-opinion@gitkado-cc-marketplace
+/plugin install second-opinion@gitkado-cc-marketplace
 ```
 
 ## プラグインの種類
@@ -63,19 +71,13 @@ Claude Codeでは以下のようなプラグインを利用できます：
 
 ## 参考資料
 
-### プラグイン関連（英語）
+### プラグイン関連
 - [Create plugins](https://code.claude.com/docs/en/plugins) - プラグインの作成
 - [Discover and install plugins](https://code.claude.com/docs/en/discover-plugins) - プラグインの発見とインストール
 - [Plugins reference](https://code.claude.com/docs/en/plugins-reference) - プラグインリファレンス
 - [Plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces) - マーケットプレイスの作成と配布
 
-### プラグイン関連（日本語）
-- [プラグインを作成する](https://code.claude.com/docs/ja/plugins) - プラグインの作成
-- [プラグインを発見してインストールする](https://code.claude.com/docs/ja/discover-plugins) - プラグインの発見とインストール
-- [プラグインリファレンス](https://code.claude.com/docs/ja/plugins-reference) - 技術仕様
-- [プラグインマーケットプレイス](https://code.claude.com/docs/ja/plugin-marketplaces) - マーケットプレイスの作成と配布
-
-### その他の機能（日本語）
+### その他の機能
 - [スラッシュコマンド](https://code.claude.com/docs/ja/slash-commands) - カスタムスラッシュコマンドの作成
 - [エージェントスキル](https://code.claude.com/docs/ja/skills) - Claudeの機能を拡張するスキル
 - [サブエージェント](https://code.claude.com/docs/ja/sub-agents) - 特化型エージェントの設定
