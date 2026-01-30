@@ -5,22 +5,5 @@
   "author": {
     "name": "gitkado"
   },
-  "lspServers": "./.lsp.json",
-  "dependencies": {
-    "required": [
-      {
-        "name": "ruby-lsp",
-        "type": "gem",
-        "description": "Ruby Language Server Protocol implementation",
-        "install": "gem install ruby-lsp",
-        "installUrl": "https://github.com/Shopify/ruby-lsp"
-      },
-      {
-        "name": "ruby",
-        "type": "runtime",
-        "description": "Ruby runtime (>= 3.0 recommended)",
-        "installUrl": "https://www.ruby-lang.org/en/documentation/installation/"
-      }
-    ]
-  }
+  "lspServers": "./.lsp.json"
 }
