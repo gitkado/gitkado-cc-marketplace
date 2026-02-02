@@ -1,0 +1,7 @@
+{
+  "name": "create-pr",
+  "description": "PR creation and update skill for Claude Code",
+  "version": "1.0.0",
+  "author": { "name": "gitkado" },
+  "skills": "./skills/"
+}
