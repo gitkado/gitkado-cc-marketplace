@@ -1,0 +1,7 @@
+{
+  "name": "browser-dev",
+  "description": "Browser-based UI verification for frontend development",
+  "version": "1.0.0",
+  "author": { "name": "gitkado" },
+  "skills": "./skills/"
+}

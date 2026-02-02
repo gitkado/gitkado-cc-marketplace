@@ -60,6 +60,42 @@ codex（OpenAI CLI）を使用して、コードレビューや設計相談の�
 /plugin install second-opinion@gitkado-cc-marketplace
 ```
 
+### create-pr
+
+PR creation and update skill for Claude Code
+
+コミット済みの変更をGitHubにpushし、PRを作成または更新するスキルです。
+
+**依存関係:**
+- [GitHub CLI](https://cli.github.com/) (`gh`) - GitHub操作ツール (`brew install gh`)
+
+```bash
+/plugin install create-pr@gitkado-cc-marketplace
+```
+
+### browser-dev
+
+Browser-based UI verification for frontend development
+
+agent-browser CLIを使って、フロントエンド開発時のUI確認・デバッグ・操作テストを行うスキルです。
+
+**依存関係:**
+- [agent-browser](https://github.com/anthropics/agent-browser) - ブラウザ自動化ツール
+
+```bash
+/plugin install browser-dev@gitkado-cc-marketplace
+```
+
+### skill-create
+
+Claude Code skill creation and migration tool
+
+プロジェクトの規約に沿った品質の一定したスキルを対話的に作成・改修するスキルです。
+
+```bash
+/plugin install skill-create@gitkado-cc-marketplace
+```
+
 ## プラグインの種類
 
 Claude Codeでは以下のようなプラグインを利用できます：

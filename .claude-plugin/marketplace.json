@@ -22,6 +22,24 @@
       "source": "./second-opinion",
       "description": "Get second opinions from codex (OpenAI CLI) for code review and design consultation",
       "version": "1.0.0"
+    },
+    {
+      "name": "create-pr",
+      "source": "./create-pr",
+      "description": "PR creation and update skill for Claude Code",
+      "version": "1.0.0"
+    },
+    {
+      "name": "browser-dev",
+      "source": "./browser-dev",
+      "description": "Browser-based UI verification for frontend development",
+      "version": "1.0.0"
+    },
+    {
+      "name": "skill-create",
+      "source": "./skill-create",
+      "description": "Claude Code skill creation and migration tool",
+      "version": "1.0.0"
     }
   ]
 }

@@ -1,0 +1,7 @@
+{
+  "name": "skill-create",
+  "description": "Claude Code skill creation and migration tool",
+  "version": "1.0.0",
+  "author": { "name": "gitkado" },
+  "skills": "./skills/"
+}
