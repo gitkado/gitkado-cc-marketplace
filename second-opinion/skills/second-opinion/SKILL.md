@@ -10,7 +10,7 @@ description: codex（OpenAI CLI）を呼び出してセカンドオピニオン�
 このスキルを使用するには以下が必要です：
 
 1. **tmux**: ターミナルマルチプレクサ
-2. **codex**: OpenAI CLI（`npm install -g @openai/codex` または `npx codex`）
+2. **codex**: OpenAI CLI（`codex-cli >= 0.98.0`、`npm install -g @openai/codex` または `npx codex`）
 3. **jq**: JSONプロセッサ（`brew install jq`）
 4. **tmuxセッション内で実行**: `$TMUX` 環境変数が設定されていること
 
@@ -253,6 +253,7 @@ git add <file>
 | エラー | 検出方法 | 対処 |
 |--------|----------|------|
 | codex未インストール | `command -v codex` | `npx codex` を試行。それも失敗なら `npm install -g @openai/codex` を案内 |
+| codexバージョン不足 | `codex --version` | `npm install -g @openai/codex` で更新（`0.98.0+` 必須） |
 | jq未インストール | `command -v jq` | `brew install jq` を案内 |
 | tmux未インストール | `command -v tmux` | `brew install tmux` を案内 |
 | tmuxセッション外 | `$TMUX` 変数が空 | `tmux new -s dev` でセッション開始を案内 |
@@ -292,16 +293,22 @@ git add <file>
 
 ## モデル設定
 
-デフォルトは `~/.codex/config.toml` の設定を使用します（通常 **gpt-5.2-codex**）。
+デフォルトは `~/.codex/config.toml` の設定を使用します（スキル側で固定しません）。
 
 ### 環境変数でモデル指定
 
 ```bash
 # セッション開始時にモデルを指定
-CODEX_MODEL="gpt-5.2-codex" .claude/skills/second-opinion/start.sh
+CODEX_MODEL="gpt-5.3-codex" .claude/skills/second-opinion/start.sh
 
 # ワンショット実行でモデル指定
-CODEX_MODEL="gpt-5.2-codex" .claude/skills/second-opinion/exec.sh "質問"
+CODEX_MODEL="gpt-5.3-codex" .claude/skills/second-opinion/exec.sh "質問"
+
+# 複雑な設計相談では推論努力を上げる
+CODEX_REASONING_EFFORT="high" .claude/skills/second-opinion/design.sh "auth-system"
+
+# config.toml の profile を使用
+CODEX_PROFILE="second_opinion_review" .claude/skills/second-opinion/review.sh
 ```
 
 ### 推論努力（Reasoning Effort）
@@ -310,6 +317,7 @@ CODEX_MODEL="gpt-5.2-codex" .claude/skills/second-opinion/exec.sh "質問"
 
 | 設定 | 用途 | 特徴 |
 |------|------|------|
+| `low` | 事実確認、短い質問 | 最速、コスト最小 |
 | `medium` | 日常のコードレビュー、軽い質問 | バランス型、速度重視 |
 | `high` | 設計相談、複雑なレビュー | 深い推論、品質重視 |
 

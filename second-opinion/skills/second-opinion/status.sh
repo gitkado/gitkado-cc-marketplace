@@ -25,6 +25,8 @@ if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   exit 0
 fi
 
+build_codex_args || exit 1
+
 # セッションID確認
 SESSION_ID=$(get_session_id)
 
@@ -54,7 +56,10 @@ echo ""
 echo "設定:"
 echo "  Sandbox: read-only"
 echo "  Approval: never (自動承認)"
-echo "  Args: $CODEX_EXEC_ARGS"
+echo "  Model Override: ${CODEX_MODEL:-<config.toml の既定値>}"
+echo "  Reasoning Effort Override: ${CODEX_REASONING_EFFORT:-<config.toml の既定値>}"
+echo "  Profile: ${CODEX_PROFILE:-<default>}"
+echo "  Args: $CODEX_EXEC_ARGS_DISPLAY"
 echo ""
 echo "使用可能なコマンド:"
 echo "  /second-opinion ask <prompt>   - プロンプト送信（セッション継続）"

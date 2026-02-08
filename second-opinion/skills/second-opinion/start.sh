@@ -11,8 +11,9 @@ source "$SCRIPT_DIR/lib.sh"
 check_tmux_installed || exit 1
 check_tmux_session || exit 1
 check_jq_installed || exit 1
-
-CODEX_CMD=$(get_codex_command) || exit 1
+build_codex_args || exit 1
+get_codex_command || exit 1
+check_codex_version_min || exit 1
 
 # 既存セッションの確認
 EXISTING_SESSION=$(get_session_id)
@@ -24,16 +25,21 @@ fi
 
 # 一時ファイル作成
 OUTPUT_FILE=$(create_temp_file "so-start-jsonl")
-setup_cleanup_trap "$OUTPUT_FILE"
+ERROR_FILE=$(create_temp_file "so-start-stderr")
+setup_cleanup_trap "$OUTPUT_FILE" "$ERROR_FILE"
 
 echo "新規セッションを開始中..."
 
 # codex exec --json でセッション開始
-# NOTE: シェル変数展開を正しく行うためevalを使用
-if ! eval "$CODEX_CMD exec $CODEX_EXEC_ARGS --json 'セッション開始。以降の質問に回答してください。'" > "$OUTPUT_FILE" 2>&1; then
+if ! "${CODEX_BASE_CMD[@]}" exec "${CODEX_EXEC_ARGS[@]}" --json "セッション開始。以降の質問に回答してください。" > "$OUTPUT_FILE" 2> "$ERROR_FILE"; then
   echo "Error: セッション開始に失敗しました" >&2
   echo "--- 詳細 ---"
-  cat "$OUTPUT_FILE"
+  if [[ -s "$ERROR_FILE" ]]; then
+    cat "$ERROR_FILE"
+  fi
+  if [[ -s "$OUTPUT_FILE" ]]; then
+    cat "$OUTPUT_FILE"
+  fi
   exit 1
 fi
 
@@ -43,6 +49,10 @@ if [[ -z "$SESSION_ID" ]]; then
   echo "Error: セッションIDを取得できませんでした" >&2
   echo "--- JSONL出力 ---"
   cat "$OUTPUT_FILE"
+  if [[ -s "$ERROR_FILE" ]]; then
+    echo "--- stderr ---"
+    cat "$ERROR_FILE"
+  fi
   exit 1
 fi
 

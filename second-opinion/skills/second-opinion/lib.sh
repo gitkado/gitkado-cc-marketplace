@@ -46,24 +46,107 @@ CODEX_PANE_FILE="$(_get_pane_file)"
 
 # codex モデル設定
 # 環境変数 CODEX_MODEL で指定可能（未指定時は config.toml のデフォルトを使用）
-# 例: CODEX_MODEL="o3" /second-opinion start
+# 例: CODEX_MODEL="gpt-5.3-codex" /second-opinion start
 CODEX_MODEL="${CODEX_MODEL:-}"
+# 推論努力（未指定時は config.toml のデフォルトを使用）
+CODEX_REASONING_EFFORT="${CODEX_REASONING_EFFORT:-}"
+# config.toml の profile（任意）
+CODEX_PROFILE="${CODEX_PROFILE:-}"
 
-# モデル引数を生成（モデルが指定されていれば -m オプションを追加）
-_get_model_args() {
-  if [[ -n "$CODEX_MODEL" ]]; then
-    echo "-m $CODEX_MODEL"
-  fi
+# codex-cli の最小サポートバージョン
+CODEX_MIN_VERSION="0.98.0"
+
+# codex 実行コマンド（codex または npx codex）
+declare -a CODEX_BASE_CMD=()
+# codex 引数（配列で保持して eval を避ける）
+declare -a CODEX_EXEC_ARGS=()
+declare -a CODEX_RESUME_ARGS=()
+
+# 配列を表示用文字列に変換
+_format_args_for_display() {
+  local formatted=""
+  local arg
+  for arg in "$@"; do
+    local quoted
+    printf -v quoted "%q" "$arg"
+    if [[ -n "$formatted" ]]; then
+      formatted+=" "
+    fi
+    formatted+="$quoted"
+  done
+  echo "$formatted"
 }
 
-# codex 引数設定
-# 対話モード用（start.sh）: sandbox + 承認プロンプトスキップ
-CODEX_INTERACTIVE_ARGS="--sandbox read-only -a never $(_get_model_args)"
-# 非対話モード用（exec.sh, design.sh, review.sh）: sandbox + 承認プロンプトスキップ
-# NOTE: codex exec には -a オプションがないため、-c で設定をオーバーライド
-CODEX_EXEC_ARGS="--sandbox read-only -c approval_policy=\"never\" $(_get_model_args)"
-# セッション継続用（ask.sh）: codex exec resume は --sandbox をサポートしないため -c で設定
-CODEX_RESUME_ARGS="-c approval_policy=\"never\" $(_get_model_args)"
+CODEX_EXEC_ARGS_DISPLAY=""
+CODEX_RESUME_ARGS_DISPLAY=""
+
+# x.y.z 形式のバージョンを比較（$1 >= $2 なら 0 を返す）
+version_ge() {
+  local left="$1"
+  local right="$2"
+
+  local l1=0 l2=0 l3=0
+  local r1=0 r2=0 r3=0
+
+  IFS='.' read -r l1 l2 l3 <<< "$left"
+  IFS='.' read -r r1 r2 r3 <<< "$right"
+
+  l1=${l1:-0}; l2=${l2:-0}; l3=${l3:-0}
+  r1=${r1:-0}; r2=${r2:-0}; r3=${r3:-0}
+
+  if (( l1 > r1 )); then return 0; fi
+  if (( l1 < r1 )); then return 1; fi
+  if (( l2 > r2 )); then return 0; fi
+  if (( l2 < r2 )); then return 1; fi
+  if (( l3 >= r3 )); then return 0; fi
+  return 1
+}
+
+# 推論努力の値を検証
+validate_reasoning_effort() {
+  if [[ -z "$CODEX_REASONING_EFFORT" ]]; then
+    return 0
+  fi
+
+  case "$CODEX_REASONING_EFFORT" in
+    low|medium|high)
+      return 0
+      ;;
+    *)
+      echo "Error: CODEX_REASONING_EFFORT が不正です: $CODEX_REASONING_EFFORT" >&2
+      echo "使用可能: low, medium, high" >&2
+      return 1
+      ;;
+  esac
+}
+
+# codex 引数を再構築
+build_codex_args() {
+  validate_reasoning_effort || return 1
+
+  CODEX_EXEC_ARGS=(--sandbox read-only -c 'approval_policy="never"')
+  CODEX_RESUME_ARGS=(-c 'approval_policy="never"')
+
+  if [[ -n "$CODEX_PROFILE" ]]; then
+    CODEX_EXEC_ARGS+=(-p "$CODEX_PROFILE")
+    CODEX_RESUME_ARGS+=(-p "$CODEX_PROFILE")
+  fi
+
+  if [[ -n "$CODEX_MODEL" ]]; then
+    CODEX_EXEC_ARGS+=(-m "$CODEX_MODEL")
+    CODEX_RESUME_ARGS+=(-m "$CODEX_MODEL")
+  fi
+
+  if [[ -n "$CODEX_REASONING_EFFORT" ]]; then
+    local effort_config
+    effort_config="model_reasoning_effort=\"$CODEX_REASONING_EFFORT\""
+    CODEX_EXEC_ARGS+=(-c "$effort_config")
+    CODEX_RESUME_ARGS+=(-c "$effort_config")
+  fi
+
+  CODEX_EXEC_ARGS_DISPLAY=$(_format_args_for_display "${CODEX_EXEC_ARGS[@]}")
+  CODEX_RESUME_ARGS_DISPLAY=$(_format_args_for_display "${CODEX_RESUME_ARGS[@]}")
+}
 
 # --------------------------------------------------------------------------
 # 前提条件チェック
@@ -91,14 +174,44 @@ check_tmux_session() {
 
 get_codex_command() {
   if command -v codex &>/dev/null; then
-    echo "codex"
+    CODEX_BASE_CMD=(codex)
   elif command -v npx &>/dev/null; then
-    echo "npx codex"
+    CODEX_BASE_CMD=(npx codex)
   else
     echo "Error: codex が見つかりません" >&2
     echo "インストール方法:" >&2
     echo "  npm install -g @openai/codex" >&2
     echo "または npx codex で実行してください" >&2
+    return 1
+  fi
+
+  return 0
+}
+
+# codex-cli のバージョンを取得
+get_codex_version() {
+  local version_output=""
+
+  version_output=$("${CODEX_BASE_CMD[@]}" --version 2>&1) || true
+
+  echo "$version_output" | grep -Eo 'codex-cli[[:space:]]+[0-9]+\.[0-9]+\.[0-9]+' | awk '{print $2}' | head -1
+}
+
+# codex-cli の最小バージョンを確認
+check_codex_version_min() {
+  local current_version
+  current_version=$(get_codex_version)
+
+  if [[ -z "$current_version" ]]; then
+    echo "Error: codex-cli のバージョンを取得できませんでした" >&2
+    echo "必要バージョン: ${CODEX_MIN_VERSION} 以上" >&2
+    return 1
+  fi
+
+  if ! version_ge "$current_version" "$CODEX_MIN_VERSION"; then
+    echo "Error: codex-cli のバージョンが古いです: $current_version" >&2
+    echo "必要バージョン: ${CODEX_MIN_VERSION} 以上" >&2
+    echo "更新方法: npm install -g @openai/codex" >&2
     return 1
   fi
 }

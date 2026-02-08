@@ -15,6 +15,7 @@ codex（OpenAI CLI）を使用してセカンドオピニオンを得るため�
 ```bash
 # codex (OpenAI CLI)
 npm install -g @openai/codex
+# 必須: codex-cli 0.98.0 以上
 
 # tmux (ターミナルマルチプレクサ)
 brew install tmux
@@ -88,6 +89,21 @@ tmux new -s dev
 - **コンテキスト自動付与**: `ai/specs/<feature>/` のドキュメントを自動参照
 - **セッション継続**: `codex exec resume` による対話コンテキスト維持
 - **安全性**: `--sandbox read-only` モードで実行
+
+## モデルと推論努力の設定
+
+`second-opinion` はモデルを固定せず、`~/.codex/config.toml` の設定を既定として使います。
+
+```bash
+# モデルを一時的に上書き
+CODEX_MODEL="gpt-5.3-codex" /second-opinion exec "この設計をレビューして"
+
+# 設計相談時に推論努力を上げる
+CODEX_REASONING_EFFORT="high" /second-opinion design auth-system
+
+# codex profile を使い分ける
+CODEX_PROFILE="second_opinion_review" /second-opinion review
+```
 
 ## ライセンス
 

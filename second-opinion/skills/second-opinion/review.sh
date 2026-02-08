@@ -113,12 +113,14 @@ fi
 # ペインがない場合はワンショット実行
 echo "codexペインが起動していないため、ワンショット実行します..."
 
-CODEX_CMD=$(get_codex_command) || exit 1
+build_codex_args || exit 1
+get_codex_command || exit 1
+check_codex_version_min || exit 1
 
 OUTPUT_FILE=$(create_temp_file "so-review-output")
 setup_cleanup_trap "$OUTPUT_FILE"
 
-if ! $CODEX_CMD exec $CODEX_EXEC_ARGS --output-last-message "$OUTPUT_FILE" "$REVIEW_PROMPT"; then
+if ! "${CODEX_BASE_CMD[@]}" exec "${CODEX_EXEC_ARGS[@]}" --output-last-message "$OUTPUT_FILE" "$REVIEW_PROMPT"; then
   echo "Error: codex の実行に失敗しました" >&2
   exit 1
 fi
