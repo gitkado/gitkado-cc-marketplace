@@ -40,6 +40,12 @@
       "source": "./skill-create",
       "description": "Claude Code skill creation and migration tool",
       "version": "1.0.0"
+    },
+    {
+      "name": "diagram",
+      "source": "./diagram",
+      "description": "Diagram creation skills using draw.io and Excalidraw MCP servers",
+      "version": "1.0.0"
     }
   ]
 }

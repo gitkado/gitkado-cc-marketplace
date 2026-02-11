@@ -96,6 +96,16 @@ Claude Code skill creation and migration tool
 /plugin install skill-create@gitkado-cc-marketplace
 ```
 
+### diagram
+
+Diagram creation skills using draw.io and Excalidraw MCP servers
+
+draw.io と Excalidraw の MCP サーバーを活用したダイアグラム作成スキルです。プラグインインストール時に MCP サーバーも自動設定されます。
+
+```bash
+/plugin install diagram@gitkado-cc-marketplace
+```
+
 ## プラグインの種類
 
 Claude Codeでは以下のようなプラグインを利用できます：
