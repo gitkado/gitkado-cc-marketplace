@@ -1,0 +1,17 @@
+{
+  "name": "diagram",
+  "description": "Diagram creation skills using draw.io and Excalidraw MCP servers",
+  "version": "1.0.0",
+  "author": { "name": "gitkado" },
+  "skills": "./skills/",
+  "mcpServers": {
+    "drawio": {
+      "command": "npx",
+      "args": ["-y", "@drawio/mcp"]
+    },
+    "excalidraw": {
+      "command": "npx",
+      "args": ["-y", "excalidraw-mcp"]
+    }
+  }
+}
